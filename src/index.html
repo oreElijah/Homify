@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Loan Eligibility Predictor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Loan Eligibility Predictor</h1>
+    <form id="loanForm">
+      <input type="number" placeholder="No. of Dependents" name="no_of_dependents" required />
+      <input type="number" placeholder="Annual Income" name="income_annum" required />
+      <input type="number" placeholder="Loan Amount" name="loan_amount" required />
+      <input type="number" placeholder="Loan Term (in months)" name="loan_term" required />
+      <input type="number" placeholder="Residential Assets Value" name="residential_assets_value" required />
+      <input type="number" placeholder="Commercial Assets Value" name="commercial_assets_value" required />
+      <input type="number" placeholder="Luxury Assets Value" name="luxury_assets_value" required />
+      <input type="number" placeholder="Bank Asset Value" name="bank_asset_value" required />
+
+      <select name="education" required>
+        <option value="">Select Education</option>
+        <option value="graduate">Graduate</option>
+        <option value="not graduate">Not Graduate</option>
+      </select>
+
+      <select name="self_employed" required>
+        <option value="">Self Employed?</option>
+        <option value="yes">Yes</option>
+        <option value="no">No</option>
+      </select>
+
+      <button type="submit">Predict</button>
+    </form>
+
+    <div id="result" class="result"></div>
+  </div>
+
+<script>
+  const form = document.getElementById("loanForm");
+  const resultDiv = document.getElementById("result");
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    // Convert numeric strings to numbers
+    for (let key in data) {
+      data[key] = isNaN(data[key]) ? data[key] : Number(data[key]);
+    }
+
+    try {
+      const res = await fetch("http://localhost:8000/loan_eligibility_predictor", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+      console.log(result); // Debug log
+
+
+      resultDiv.innerHTML = `
+        <div class="result-card">
+          <h2>Status: <span class="${result.loan_eligibility.includes('Eligible') ? 'approved' : 'denied'}">
+            ${result.loan_eligibility}
+          </span></h2>
+          <p><strong>Risk Level:</strong> ${result.risk_level || 'N/A'}</p>
+          <p><strong>Advice:</strong> ${result.advice || 'N/A'}</p>
+          <p><strong>Summary:</strong> ${result.summary || 'N/A'}</p>
+        </div>
+      `;
+
+      resultDiv.classList.remove("hidden");
+      resultDiv.classList.add("visible");
+
+    } catch (err) {
+      resultDiv.textContent = "❌ Error connecting to backend.";
+      resultDiv.classList.remove("hidden");
+      resultDiv.classList.add("visible");
+      console.error(err);
+    }
+  });
+</script>
+
+</body>
+</html>
