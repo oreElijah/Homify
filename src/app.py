@@ -38,4 +38,4 @@ app.include_router(house_predict_router)
 
 if __name__ == "__main__":
     port = int(8000)  # default to 8000 locally
-    uvicorn.run("app:app", host="0.0.0.0", port=port)
+    uvicorn.run("src.app:app", host="0.0.0.0", port=port)
