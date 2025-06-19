@@ -6,7 +6,8 @@ from Routers.price_predict import router as house_predict_router
 from database.config import connect_db, disconnect_db  
 
 from fastapi.middleware.cors import CORSMiddleware
-
+import os
+import uvicorn
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -34,3 +35,7 @@ app.add_middleware(
 )
 app.include_router(loan_predict_router)
 app.include_router(house_predict_router)
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 8000))  # default to 8000 locally
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)
