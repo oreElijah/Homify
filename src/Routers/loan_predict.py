@@ -61,3 +61,6 @@ async def predict_eligibility(data: LoanInputData):
             "advice": "This applicant has a low predicted ability to repay. Recommend applying for a lower loan amount if proceeding.",
             "summary": "High risk. Lending is discouraged unless collateral is secured."
         }
+@router.get("/")
+async def home():
+    return {"message": "Homify"}
