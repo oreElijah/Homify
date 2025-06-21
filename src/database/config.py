@@ -23,7 +23,7 @@ sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True
     sqlalchemy.Column("prediction", sqlalchemy.String)  # store ML output
 )
 
-HousePriceInfo_table = sqlalchemy.Table("house-price-info", metadata, 
+HousePriceInfo_table = sqlalchemy.Table("house_price_info", metadata, 
 sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True, autoincrement=True),
     sqlalchemy.Column("bedroom", sqlalchemy.Integer),
     sqlalchemy.Column("bathroom", sqlalchemy.Integer),
